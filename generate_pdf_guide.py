@@ -470,29 +470,42 @@ def build_pdf(filename="YogaSync_AI_Complete_Guide_Steps_1_to_6.pdf"):
     ]))
     story.append(t_err)
 
-    # OFFICIAL CREDENTIALS & ACCESS
+    # ROLE-BASED ACCESS CONTROL ARCHITECTURE (ANONYMIZED & SECURE)
     story.append(Spacer(1, 10))
-    story.append(Paragraph("9. Official Team Roster & Access Credentials", h1_style))
-    story.append(Paragraph("The portal is locked behind mandatory authentication. Only the following 5 team members have authorized access:", body_style))
+    story.append(Paragraph("9. Role-Based Access Control & Security Architecture", h1_style))
+    story.append(Paragraph("The portal enforces strict role-based access control (RBAC). All internal routes are shielded behind the <code>AuthGuard</code> component, and API endpoints validate user permissions before granting write or review access:", body_style))
     
-    creds_data = [
-        [Paragraph("<b>Role</b>", table_header), Paragraph("<b>Full Name / User</b>", table_header), Paragraph("<b>Username</b>", table_header), Paragraph("<b>Password</b>", table_header), Paragraph("<b>Landing Route</b>", table_header)],
-        [Paragraph("Team Member", table_cell), Paragraph("Ifraaz", table_cell), Paragraph("<code>ifraaz</code>", table_cell_code), Paragraph("<code>ifraaz@9482</code>", table_cell_code), Paragraph("/upload", table_cell)],
-        [Paragraph("Team Member", table_cell), Paragraph("Pavani", table_cell), Paragraph("<code>pavani</code>", table_cell_code), Paragraph("<code>pavani@7319</code>", table_cell_code), Paragraph("/upload", table_cell)],
-        [Paragraph("Reviewer", table_cell), Paragraph("Faizan", table_cell), Paragraph("<code>faizan</code>", table_cell_code), Paragraph("<code>faizan@5821</code>", table_cell_code), Paragraph("/review", table_cell)],
-        [Paragraph("Reviewer", table_cell), Paragraph("Nidhishree", table_cell), Paragraph("<code>nidhishree</code>", table_cell_code), Paragraph("<code>nidhi@6194</code>", table_cell_code), Paragraph("/review", table_cell)],
-        [Paragraph("Project Mentor", table_cell), Paragraph("Manasa", table_cell), Paragraph("<code>manasa</code>", table_cell_code), Paragraph("<code>manasa@8402</code>", table_cell_code), Paragraph("/admin", table_cell)],
+    rbac_data = [
+        [Paragraph("<b>Role Level</b>", table_header), Paragraph("<b>Authorized Capabilities</b>", table_header), Paragraph("<b>Target Route</b>", table_header), Paragraph("<b>Security Boundaries</b>", table_header)],
+        [
+            Paragraph("<b>Team Member / Contributor</b>", table_cell),
+            Paragraph("Upload raw media (images/videos), capture pose metadata, execute client-side landmark validation.", table_cell),
+            Paragraph("<code>/upload</code>", table_cell_code),
+            Paragraph("Cannot approve/reject peer submissions or modify system configuration.", table_cell)
+        ],
+        [
+            Paragraph("<b>Reviewer / Quality Auditor</b>", table_cell),
+            Paragraph("Inspect submitted samples, evaluate anatomical angles against tolerance thresholds, Approve/Reject records.", table_cell),
+            Paragraph("<code>/review</code>", table_cell_code),
+            Paragraph("Audit trail logged for all reviews; cannot purge global dataset.", table_cell)
+        ],
+        [
+            Paragraph("<b>Project Mentor / Admin</b>", table_cell),
+            Paragraph("Full supervisory oversight, monitor dataset health & balance metrics, export dataset manifests, purge test records.", table_cell),
+            Paragraph("<code>/admin</code>", table_cell_code),
+            Paragraph("Elevated privileges with Supabase Service Role security integration.", table_cell)
+        ],
     ]
-    t_creds = Table(creds_data, colWidths=[80, 80, 80, 110, 154])
-    t_creds.setStyle(TableStyle([
+    t_rbac = Table(rbac_data, colWidths=[90, 160, 80, 174])
+    t_rbac.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,0), ACCENT_GREEN),
         ('BOX', (0,0), (-1,-1), 1, PRIMARY),
         ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor("#CBD5E1")),
-        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+        ('VALIGN', (0,0), (-1,-1), 'TOP'),
         ('TOPPADDING', (0,0), (-1,-1), 4),
         ('BOTTOMPADDING', (0,0), (-1,-1), 4),
     ]))
-    story.append(t_creds)
+    story.append(t_rbac)
 
     # 8 CANONICAL ASANAS REFERENCE
     story.append(Spacer(1, 10))
