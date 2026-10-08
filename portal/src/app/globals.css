@@ -1,0 +1,223 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+:root {
+  color-scheme: only light;
+  --color-green: #B9FF66;
+  --color-black: #191A23;
+  --color-gray: #F3F3F3;
+  --color-white: #FFFFFF;
+}
+
+body {
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #FFFFFF;
+  color: #191A23;
+  letter-spacing: -0.01em;
+}
+
+/* Neo-Brutalist Rounded Cards (THASNEEME ISHQ Style) */
+.neo-card {
+  background-color: #FFFFFF;
+  border: 3px solid #191A23;
+  box-shadow: 6px 6px 0px 0px #191A23;
+  border-radius: 20px;
+  transition: transform 0.2s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.neo-card-sm {
+  background-color: #FFFFFF;
+  border: 3px solid #191A23;
+  box-shadow: 4px 4px 0px 0px #191A23;
+  border-radius: 14px;
+}
+
+.neo-card-interactive {
+  cursor: pointer;
+}
+
+.neo-card-interactive:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px 0px #191A23;
+}
+
+.neo-card-interactive:active {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0px 0px #191A23;
+}
+
+/* Neo-Brutalist Buttons */
+.neo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  color: #191A23;
+  border: 3px solid #191A23;
+  box-shadow: 5px 5px 0px 0px #191A23;
+  border-radius: 12px;
+  font-weight: 700;
+  transition: transform 0.15s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.15s cubic-bezier(0.165, 0.84, 0.44, 1);
+  cursor: pointer;
+  user-select: none;
+}
+
+.neo-btn:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 6px 6px 0px 0px #191A23;
+}
+
+.neo-btn:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: 1px 1px 0px 0px #191A23;
+}
+
+.neo-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: 2px 2px 0px 0px #191A23;
+}
+
+.neo-btn-primary {
+  background-color: #B9FF66;
+  color: #191A23;
+}
+
+.neo-btn-primary:hover:not(:disabled) {
+  background-color: #a8f553;
+}
+
+.neo-btn-dark {
+  background-color: #191A23;
+  color: #FFFFFF;
+}
+
+.neo-btn-dark:hover:not(:disabled) {
+  background-color: #2a2b38;
+}
+
+.neo-btn-coral {
+  background-color: #FF6B4A;
+  color: #FFFFFF;
+}
+
+.neo-btn-coral:hover:not(:disabled) {
+  background-color: #f05a38;
+}
+
+/* Neo-Brutalist Badges & Highlights */
+.neo-highlight-green {
+  background-color: #B9FF66;
+  border: 2px solid #191A23;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px 0px #191A23;
+  display: inline-block;
+  font-weight: 700;
+}
+
+.neo-highlight-white {
+  background-color: #FFFFFF;
+  border: 2px solid #191A23;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px 0px #191A23;
+  display: inline-block;
+  font-weight: 700;
+}
+
+.neo-badge {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.65rem;
+  border: 2px solid #191A23;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px 0px #191A23;
+}
+
+.neo-badge-pending {
+  background-color: #FFE600;
+  color: #191A23;
+}
+
+.neo-badge-approved {
+  background-color: #B9FF66;
+  color: #191A23;
+}
+
+.neo-badge-rejected {
+  background-color: #FF6B4A;
+  color: #FFFFFF;
+}
+
+/* Form Inputs */
+.neo-input {
+  width: 100%;
+  border: 3px solid #191A23;
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: #191A23;
+  box-shadow: 3px 3px 0px 0px #191A23;
+  transition: all 0.15s ease;
+}
+
+.neo-input:focus {
+  outline: none;
+  background-color: #F8FFF0;
+  box-shadow: 5px 5px 0px 0px #191A23;
+}
+
+/* Tables */
+.neo-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 3px solid #191A23;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 5px 5px 0px 0px #191A23;
+}
+
+.neo-table th {
+  background-color: #191A23;
+  color: #FFFFFF;
+  border-bottom: 3px solid #191A23;
+  padding: 12px 16px;
+  font-weight: 700;
+}
+
+.neo-table td {
+  border-bottom: 2px solid #E5E7EB;
+  padding: 12px 16px;
+  background-color: #FFFFFF;
+}
+
+.neo-table tr:last-child td {
+  border-bottom: none;
+}
+
+.neo-table tr:nth-child(even) td {
+  background-color: #F9FAFB;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FFFFFF;
+  border-left: 2px solid #191A23;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #191A23;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B9FF66;
+}

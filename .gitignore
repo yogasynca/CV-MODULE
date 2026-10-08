@@ -1,0 +1,38 @@
+# Node dependencies & Next.js build
+node_modules/
+portal/node_modules/
+.next/
+portal/.next/
+out/
+portal/out/
+build/
+dist/
+
+# Python virtual environment & cache
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*/__pycache__/
+*/*/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Environment variables & local secrets
+.env.local
+portal/.env.local
+.env.*.local
+*.pem
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

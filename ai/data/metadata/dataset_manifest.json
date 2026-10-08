@@ -1,0 +1,28 @@
+{
+  "dataset_version": "0.1.0",
+  "schema_version": "0.1",
+  "creation_date": "2026-10-08T11:39:36.832118+00:00",
+  "last_updated": "2026-10-08T11:40:19.093554+00:00",
+  "poses": [
+    "tadasana",
+    "tree_pose",
+    "warrior_2",
+    "downward_dog",
+    "chair_pose"
+  ],
+  "total_samples": 21,
+  "valid_samples": 20,
+  "questionable_samples": 0,
+  "invalid_samples": 1,
+  "pose_counts": {
+    "tadasana": 5,
+    "tree_pose": 4,
+    "warrior_2": 4,
+    "downward_dog": 4,
+    "chair_pose": 4
+  },
+  "sources": {
+    "synthetic_seed": 20,
+    "webcam": 1
+  }
+}
