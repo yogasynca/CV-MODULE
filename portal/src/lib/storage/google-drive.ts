@@ -107,16 +107,9 @@ export async function uploadToGoogleDrive(
   fileType: "image" | "video"
 ): Promise<UploadResult> {
   if (!isGoogleDriveConfigured) {
-    // Fallback: Generate simulated server result when credentials are pending
-    const simulatedId = `gdrive_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
-    const storagePath = `YogaSync-Dataset/raw/${poseId}/${fileType === "image" ? "images" : "videos"}/${fileName}`;
-    return {
-      fileId: simulatedId,
-      fileName,
-      storagePath,
-      webViewLink: `https://drive.google.com/file/d/${simulatedId}/view`,
-      sizeBytes: fileBuffer.length,
-    };
+    throw new Error(
+      "Google Drive is not configured on this server. Please ensure GDRIVE_CLIENT_ID, GDRIVE_CLIENT_SECRET, and GDRIVE_REFRESH_TOKEN are added to your environment variables (e.g., in Vercel Settings)."
+    );
   }
 
   const drive = getDriveClient();
@@ -174,11 +167,15 @@ export async function testGoogleDriveConnection(): Promise<{
   connected: boolean;
   message: string;
   storageQuota?: { limit?: string; usage?: string };
+  user?: { displayName?: string; emailAddress?: string };
+  tokenExpired?: boolean;
+  needsSetup?: boolean;
 }> {
   if (!isGoogleDriveConfigured) {
     return {
       connected: false,
-      message: "Google Drive credentials not set in .env.local (Running in Local Simulated Mode).",
+      needsSetup: true,
+      message: "Google Drive credentials not configured on this server. (Missing GDRIVE_CLIENT_ID, GDRIVE_CLIENT_SECRET, or GDRIVE_REFRESH_TOKEN in environment variables).",
     };
   }
 
@@ -189,16 +186,29 @@ export async function testGoogleDriveConnection(): Promise<{
     });
     return {
       connected: true,
-      message: `Connected successfully to Google Drive (User: ${about.data.user?.displayName || "Project Owner"}).`,
+      user: {
+        displayName: about.data.user?.displayName || "Project Owner",
+        emailAddress: about.data.user?.emailAddress || undefined,
+      },
+      message: `Connected successfully to Google Drive (${about.data.user?.displayName || "Project Owner"}).`,
       storageQuota: {
         limit: about.data.storageQuota?.limit || undefined,
         usage: about.data.storageQuota?.usage || undefined,
       },
     };
   } catch (error: any) {
+    const errMsg = String(error?.message || error);
+    const isExpired =
+      errMsg.includes("invalid_grant") ||
+      errMsg.includes("expired") ||
+      errMsg.includes("revoked");
+
     return {
       connected: false,
-      message: `Failed to connect to Google Drive: ${error.message || error}`,
+      tokenExpired: isExpired,
+      message: isExpired
+        ? "Google Drive OAuth token has expired (Google 7-day testing limit). Please reconnect your Google account in Settings."
+        : `Failed to connect to Google Drive: ${errMsg}`,
     };
   }
 }

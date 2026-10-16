@@ -147,8 +147,21 @@ export default function MetadataForm({ selectedPose, files, onReset }: MetadataF
       </div>
 
       {errorMessage && (
-        <div className="p-3.5 bg-[#FF6B4A] text-white rounded-xl border-2 border-[#191A23] font-bold text-xs shadow-[2px_2px_0px_#191A23]">
-          {errorMessage}
+        <div className="p-4 bg-[#FF6B4A] text-white rounded-xl border-2 border-[#191A23] font-bold text-xs shadow-[2px_2px_0px_#191A23] space-y-2.5">
+          <div className="leading-relaxed">{errorMessage}</div>
+          {(errorMessage.toLowerCase().includes("google drive") ||
+            errorMessage.toLowerCase().includes("token") ||
+            errorMessage.toLowerCase().includes("expired") ||
+            errorMessage.toLowerCase().includes("credentials")) && (
+            <div>
+              <Link
+                href="/settings"
+                className="inline-flex items-center gap-1.5 bg-white text-[#191A23] px-3.5 py-2 rounded-lg border-2 border-[#191A23] font-extrabold text-[11px] shadow-[2px_2px_0px_#191A23] hover:bg-[#B9FF66] transition-colors"
+              >
+                ⚡ GO TO SETTINGS TO CONNECT GOOGLE DRIVE →
+              </Link>
+            </div>
+          )}
         </div>
       )}
 

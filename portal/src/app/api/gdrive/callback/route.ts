@@ -20,12 +20,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(`${protocol}://${host}/settings?gdrive_error=missing_auth_code`);
   }
 
-  const clientId = process.env.GDRIVE_CLIENT_ID || "729596963071-46gnp2i93jso6t5ump3o57e9pl1nkern.apps.googleusercontent.com";
+  const clientId = process.env.GDRIVE_CLIENT_ID || "";
   const clientSecret = process.env.GDRIVE_CLIENT_SECRET || "";
 
   if (!clientId || !clientSecret) {
     return NextResponse.redirect(
-      `${protocol}://${host}/settings?gdrive_error=${encodeURIComponent("GDRIVE_CLIENT_SECRET is missing in .env.local")}`
+      `${protocol}://${host}/settings?gdrive_error=${encodeURIComponent("GDRIVE_CLIENT_ID or GDRIVE_CLIENT_SECRET is missing in environment variables.")}`
     );
   }
 
@@ -34,27 +34,32 @@ export async function GET(req: NextRequest) {
     const { tokens } = await oauth2Client.getToken(code);
 
     if (tokens.refresh_token) {
-      // Save/update .env.local file
-      const envPath = path.join(process.cwd(), ".env.local");
-      let envContent = "";
-      if (fs.existsSync(envPath)) {
-        envContent = fs.readFileSync(envPath, "utf-8");
+      // Save/update .env.local file if filesystem is writable (local development)
+      try {
+        const envPath = path.join(process.cwd(), ".env.local");
+        let envContent = "";
+        if (fs.existsSync(envPath)) {
+          envContent = fs.readFileSync(envPath, "utf-8");
+        }
+
+        const updateKey = (content: string, key: string, val: string) => {
+          const regex = new RegExp(`^${key}=.*$`, "m");
+          if (regex.test(content)) {
+            return content.replace(regex, `${key}=${val}`);
+          } else {
+            return `${content}\n${key}=${val}`;
+          }
+        };
+
+        envContent = updateKey(envContent, "GDRIVE_CLIENT_ID", clientId);
+        envContent = updateKey(envContent, "GDRIVE_CLIENT_SECRET", clientSecret);
+        envContent = updateKey(envContent, "GDRIVE_REFRESH_TOKEN", tokens.refresh_token);
+
+        fs.writeFileSync(envPath, envContent.trim() + "\n", "utf-8");
+      } catch (writeErr) {
+        console.warn("Could not write .env.local (read-only serverless environment):", writeErr);
       }
 
-      const updateKey = (content: string, key: string, val: string) => {
-        const regex = new RegExp(`^${key}=.*$`, "m");
-        if (regex.test(content)) {
-          return content.replace(regex, `${key}=${val}`);
-        } else {
-          return `${content}\n${key}=${val}`;
-        }
-      };
-
-      envContent = updateKey(envContent, "GDRIVE_CLIENT_ID", clientId);
-      envContent = updateKey(envContent, "GDRIVE_CLIENT_SECRET", clientSecret);
-      envContent = updateKey(envContent, "GDRIVE_REFRESH_TOKEN", tokens.refresh_token);
-
-      fs.writeFileSync(envPath, envContent.trim() + "\n", "utf-8");
       process.env.GDRIVE_REFRESH_TOKEN = tokens.refresh_token;
 
       return NextResponse.redirect(

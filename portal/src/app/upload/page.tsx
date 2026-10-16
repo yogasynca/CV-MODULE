@@ -9,7 +9,7 @@ import { useAuth } from "@/lib/auth-context";
 import AsanaSelector from "@/components/upload/AsanaSelector";
 import DropZone from "@/components/upload/DropZone";
 import MetadataForm from "@/components/upload/MetadataForm";
-import { HardDrive, Sparkles, CheckCircle2, Shield, ArrowRight } from "lucide-react";
+import { HardDrive, Sparkles, CheckCircle2, Shield, ArrowRight, AlertTriangle } from "lucide-react";
 
 function PoseParamSync({ onPoseChange }: { onPoseChange: (pose: Pose) => void }) {
   const searchParams = useSearchParams();
@@ -27,16 +27,54 @@ function UploadStationContent() {
   const { role } = useAuth();
   const [selectedPose, setSelectedPose] = useState<Pose>(INITIAL_POSES[0]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [driveStatus, setDriveStatus] = useState<any>(null);
+
+  useEffect(() => {
+    fetch("/api/gdrive/test")
+      .then((res) => res.json())
+      .then((data) => setDriveStatus(data))
+      .catch(() => setDriveStatus({ connected: false }));
+  }, []);
 
   const handleReset = () => {
     setSelectedFiles([]);
   };
+
+  const isDriveDisconnected = driveStatus && !driveStatus.connected;
 
   return (
     <div className="space-y-10">
       <Suspense fallback={null}>
         <PoseParamSync onPoseChange={setSelectedPose} />
       </Suspense>
+
+      {/* Disconnected / Expired Drive Warning Banner */}
+      {isDriveDisconnected && (
+        <div className="p-4 bg-[#FF6B4A] text-white rounded-2xl border-3 border-[#191A23] shadow-[4px_4px_0px_#191A23] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-white text-[#FF6B4A] flex items-center justify-center font-extrabold text-base shrink-0 border-2 border-[#191A23]">
+              <AlertTriangle className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="font-extrabold text-sm uppercase">
+                {driveStatus?.tokenExpired ? "Google Drive Token Expired" : "Google Drive Not Connected"}
+              </div>
+              <div className="text-xs text-white/90 font-medium">
+                {driveStatus?.tokenExpired
+                  ? "Your Google OAuth session expired (7-day test limit). Reconnect in Settings to enable upload."
+                  : "Google Drive is not authorized on this host. Reconnect in Settings to enable upload."}
+              </div>
+            </div>
+          </div>
+
+          <Link
+            href="/settings"
+            className="neo-btn bg-white text-[#191A23] px-4 py-2 text-xs font-extrabold flex items-center gap-1.5 shrink-0 shadow-[2px_2px_0px_#191A23] hover:bg-[#B9FF66]"
+          >
+            ⚡ RECONNECT IN SETTINGS →
+          </Link>
+        </div>
+      )}
 
       {/* Role Notice Banner for Reviewer / Mentor */}
       {role !== "contributor" && (
@@ -85,17 +123,23 @@ function UploadStationContent() {
               Feed YogaSync the Data it Needs.
             </h1>
             <p className="text-sm sm:text-base text-neutral-600 font-medium max-w-2xl">
-              Upload single photos or drag <strong>batch collections (1–50 files)</strong>. Real-time in-browser MediaPipe skeleton detection inspects every pose before syncing to the owner's 400 GB Google Drive.
+              Upload single photos or drag <strong>batch collections (1–50 files)</strong>. Real-time in-browser MediaPipe skeleton detection inspects every pose before syncing to the owner&apos;s 400 GB Google Drive.
             </p>
           </div>
 
-          <div className="bg-[#F3F3F3] rounded-2xl border-3 border-[#191A23] p-4 text-xs font-bold shadow-[4px_4px_0px_#191A23] flex items-center gap-3 shrink-0">
-            <div className="w-10 h-10 rounded-xl bg-[#B9FF66] border-2 border-[#191A23] flex items-center justify-center shrink-0">
+          <div className={`rounded-2xl border-3 border-[#191A23] p-4 text-xs font-bold shadow-[4px_4px_0px_#191A23] flex items-center gap-3 shrink-0 ${
+            driveStatus?.connected ? "bg-[#F3F3F3]" : "bg-[#FFF5F2]"
+          }`}>
+            <div className={`w-10 h-10 rounded-xl border-2 border-[#191A23] flex items-center justify-center shrink-0 ${
+              driveStatus?.connected ? "bg-[#B9FF66]" : "bg-[#FF6B4A] text-white"
+            }`}>
               <HardDrive className="w-5 h-5 text-[#191A23]" />
             </div>
             <div>
               <div className="text-[10px] text-neutral-500 uppercase">CENTRAL STORAGE</div>
-              <div className="text-[#191A23] font-extrabold">400 GB GOOGLE DRIVE</div>
+              <div className="text-[#191A23] font-extrabold">
+                {driveStatus?.connected ? "400 GB GOOGLE DRIVE ✓" : "RECONNECT DRIVE ⚠️"}
+              </div>
             </div>
           </div>
         </div>

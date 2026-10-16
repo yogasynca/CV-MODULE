@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
 
 export async function GET(req: NextRequest) {
-  const clientId = process.env.GDRIVE_CLIENT_ID || "729596963071-46gnp2i93jso6t5ump3o57e9pl1nkern.apps.googleusercontent.com";
+  const clientId = process.env.GDRIVE_CLIENT_ID || "";
   const clientSecret = process.env.GDRIVE_CLIENT_SECRET || "";
   const host = req.headers.get("host") || "localhost:3000";
   const protocol = host.includes("localhost") ? "http" : "https";
@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
 
   if (!clientId || !clientSecret) {
     return NextResponse.json(
-      { error: "GDRIVE_CLIENT_SECRET must be set in .env.local before initiating OAuth." },
+      { error: "GDRIVE_CLIENT_ID and GDRIVE_CLIENT_SECRET must be configured in environment variables before initiating OAuth." },
       { status: 400 }
     );
   }
